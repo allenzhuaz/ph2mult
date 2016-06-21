@@ -5,7 +5,6 @@
 design.methods <- c("s1","s2.sf","s2.f")
 
 # Power function for Intersection (rejection region) - Union (accept region/null hypothesis) Test
-
 IUT.power <- function(method=design.methods, s1.rej, s1.acc, t1.rej, t1.acc, s2.rej, t2.rej, n1, n2, n, p.s, p.t, output.all = FALSE){
   
   # to avoid the logrithm bug for 'dbinom' function, we re-define the binomial density function 
