@@ -1,39 +1,57 @@
-IUT.design <- function(method=design.methods, s1.rej, t1.rej, s1.acc, t1.acc, s2.rej, t2.rej, n1, n2, n, s.delta=0, t.delta=0, n.delta=0, 
-                       p0.s, p0.t, p1.s, p1.t, signif.level=0.05, power.level=0.85, output.all=FALSE){
-  switch (method, s1 = {
-      s <- seq(s2.rej-s.delta, s2.rej+s.delta)
-      t <- seq(t2.rej-t.delta, t2.rej+t.delta)
-      n <- seq(n-n.delta, n+n.delta)
-      combn <- expand.grid(p0.s=p0.s, p0.t=p0.t, p1.s=p1.s, p1.t=p1.t, s=s, t=t, n=n)
-      err <- pmax(mapply(IUT.power, method="s1", s2.rej=combn$s, t2.rej=combn$t, n=combn$n, p.s=combn$p0.s, p.t=0, USE.NAMES = F), 
-                       mapply(IUT.power, method="s1", s2.rej=combn$s, t2.rej=combn$t, n=combn$n, p.s=1-combn$p0.t, p.t=combn$p0.t, USE.NAMES = F))
-      pow <- mapply(IUT.power, method="s1", s2.rej=combn$s, t2.rej=combn$t, n=combn$n, p.s=combn$p1.s, p.t=combn$p1.t, USE.NAMES = F)
-    }, s2.sf = {  
-      s1 <- seq(s1.rej-s.delta, s1.rej+s.delta); s2 <- seq(s1.acc-s.delta, s1.acc+s.delta)
-      t1 <- seq(t1.rej-t.delta, t1.rej+t.delta); t2 <- seq(t1.acc-t.delta, t1.acc+t.delta)
-      a1 <- seq(s2.rej-s.delta, s2.rej+s.delta); a2 <- seq(t2.rej-t.delta, t2.rej+t.delta)
-      n1 <- seq(n1-n.delta, n1+n.delta); n2 <- seq(n2-n.delta, n2+n.delta)
-    
-      combn <- expand.grid(p0.s=p0.s, p0.t=p0.t, p1.s=p1.s, p1.t=p1.t, s1=s1, t1=t1, s2=s2, t2=t2,n1=n1, a1=a1, a2=a2, n2=n2)
-      err <- pmax(mapply(IUT.power, method="s2.sf", s1.rej=combn$s1, t1.rej=combn$t1, n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p0.s, p.t=0, USE.NAMES = F), 
-                       mapply(IUT.power, method="s2.sf", s1.rej=combn$s1, t1.rej=combn$t1, n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=1-combn$p0.t, p.t=combn$p0.t, USE.NAMES = F))
-      pow <- mapply(IUT.power, method="s2.sf", s1.rej=combn$s1, t1.rej=combn$t1, n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p1.s, p.t=combn$p1.t, USE.NAMES = F)
-    }, s2.f ={
-      s2 <- seq(s1.acc-s.delta, s1.acc+s.delta)
-      t2 <- seq(t1.acc-t.delta, t1.acc+t.delta)
-      a1 <- seq(s2.rej-s.delta, s2.rej+s.delta); a2 <- seq(t2.rej-t.delta, t2.rej+t.delta)
-      n1 <- seq(n1-n.delta, n1+n.delta); n2 <- seq(n2-n.delta, n2+n.delta)
-      
-      combn <- expand.grid(p0.s=p0.s, p0.t=p0.t, p1.s=p1.s, p1.t=p1.t,  s2=s2, t2=t2,n1=n1, a1=a1, a2=a2, n2=n2)
-      err <- pmax(mapply(IUT.power, method="s2.f", n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p0.s, p.t=0, USE.NAMES = F), 
-                         mapply(IUT.power, method="s2.f", n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=1-combn$p0.t, p.t=combn$p0.t, USE.NAMES = F))
-      pow <- mapply(IUT.power, method="s2.f",  n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p1.s, p.t=combn$p1.t, USE.NAMES = F)
-    })
-  result <- data.frame(combn, Error=err, Power=pow)
+ph2.mult.IUT.s1 <- function(r.cr, r.pd, sample.n, cr.delta=0, pd.delta=0, n.delta=0, p01, p02, p11, p12, signif.level=0.05, power.level=0.85, output.all=FALSE){
+  s <- seq(r.cr-cr.delta, r.cr+cr.delta)
+  t <- seq(r.pd-pd.delta, r.pd+pd.delta)
+  n <- seq(sample.n-n.delta, sample.n+n.delta)
+  combn <- expand.grid(p01=p01, p02=p02, p11=p11, p12=p12, s=s, t=t, n=n)
+  sig.s1.IUT <- pmax(mapply(pow.fun.IUT, method="s1", r.cr=combn$s, r.pd=combn$t, n=combn$n, p.cr=combn$p01, p.pd=0, USE.NAMES = F), 
+                     mapply(pow.fun.IUT, method="s1", r.cr=combn$s, r.pd=combn$t, n=combn$n, p.cr=1-combn$p02, p.pd=combn$p02, USE.NAMES = F))
+  power.s1.IUT <- mapply(pow.fun.IUT, method="s1", r.cr=combn$s, r.pd=combn$t, n=combn$n, p.cr=combn$p11, p.pd=combn$p12, USE.NAMES = F)
+  result <- data.frame(combn, Error=sig.s1.IUT, Power=power.s1.IUT)
   tmp <- subset(result, Error<=signif.level, Power>=power.level)
   if (output.all==TRUE){
     ## output all outcomes satisfying the limitations
-    print(tmp, digits=3)
+    print(tmp)
   }
+  ## select the samplse size and boundaries by maximizing the power
   print(tmp[tmp$Power==max(tmp$Power),],digits = 3)
 }
+
+ph2.mult.IUT.s2.sf <- function(r1.cr, r1.pd, r2.cr, r2.pd, r.cr, r.pd, sample.n1, sample.n2, cr.delta=0, pd.delta=0, n.delta=0, p01, p02, p11, p12, signif.level=0.05, power.level=0.85, output.all=FALSE){
+  s1 <- seq(r1.cr-cr.delta, r1.cr+cr.delta); s2 <- seq(r2.cr-cr.delta, r2.cr+cr.delta)
+  t1 <- seq(r1.pd-pd.delta, r1.pd+pd.delta); t2 <- seq(r2.pd-pd.delta, r2.pd+pd.delta)
+  a1 <- seq(r.cr-cr.delta, r.cr+cr.delta); a2 <- seq(r.pd-pd.delta, r.pd+pd.delta)
+  n1 <- seq(sample.n1-n.delta, sample.n1+n.delta); n2 <- seq(sample.n2-n.delta, sample.n2+n.delta)
+  
+  combn <- expand.grid(p01=p01, p02=p02, p11=p11, p12=p12, s1=s1, t1=t1, s2=s2, t2=t2,n1=n1, a1=a1, a2=a2, n2=n2)
+  sig.s1.IUT <- pmax(mapply(pow.fun.IUT, method="s2.sf", r1.cr=combn$s1, r1.pd=combn$t1, n1=combn$n1, r2.cr=combn$s2, r2.pd=combn$t2, n2=combn$n2, r.cr=combn$a1, r.pd=combn$a2, p.cr=combn$p01, p.pd=0, USE.NAMES = F), 
+                     mapply(pow.fun.IUT, method="s2.sf", r1.cr=combn$s1, r1.pd=combn$t1, n1=combn$n1, r2.cr=combn$s2, r2.pd=combn$t2, n2=combn$n2, r.cr=combn$a1, r.pd=combn$a2, p.cr=1-combn$p02, p.pd=combn$p02, USE.NAMES = F))
+  power.s1.IUT <- mapply(pow.fun.IUT, method="s2.sf", r1.cr=combn$s1, r1.pd=combn$t1, n1=combn$n1, r2.cr=combn$s2, r2.pd=combn$t2, n2=combn$n2, r.cr=combn$a1, r.pd=combn$a2, p.cr=combn$p11, p.pd=combn$p12, USE.NAMES = F)
+  result <- data.frame(combn, Error=sig.s1.IUT, Power=power.s1.IUT)
+  tmp <- subset(result, Error<=signif.level, Power>=power.level)
+  if (output.all==TRUE){
+    ## output all outcomes satisfying the limitations
+    print(tmp)
+  }
+  ## select the samplse size and boundaries by maximizing the power
+  print(tmp[tmp$Power==max(tmp$Power),],digits = 3)
+}
+  
+ph2.mult.IUT.s2.f <- function( r2.cr, r2.pd, r.cr, r.pd, sample.n1, sample.n2, cr.delta=0, pd.delta=0, n.delta=0, p01, p02, p11, p12, signif.level=0.05, power.level=0.85, output.all=FALSE){
+    s2 <- seq(r2.cr-cr.delta, r2.cr+cr.delta)
+    t2 <- seq(r2.pd-pd.delta, r2.pd+pd.delta)
+    a1 <- seq(r.cr-cr.delta, r.cr+cr.delta); a2 <- seq(r.pd-pd.delta, r.pd+pd.delta)
+    n1 <- seq(sample.n1-n.delta, sample.n1+n.delta); n2 <- seq(sample.n2-n.delta, sample.n2+n.delta)
+    
+    combn <- expand.grid(p01=p01, p02=p02, p11=p11, p12=p12,  s2=s2, t2=t2,n1=n1, a1=a1, a2=a2, n2=n2)
+    sig.s1.IUT <- pmax(mapply(pow.fun.IUT, method="s2.f", n1=combn$n1, r2.cr=combn$s2, r2.pd=combn$t2, n2=combn$n2, r.cr=combn$a1, r.pd=combn$a2, p.cr=combn$p01, p.pd=0, USE.NAMES = F), 
+                       mapply(pow.fun.IUT, method="s2.f", n1=combn$n1, r2.cr=combn$s2, r2.pd=combn$t2, n2=combn$n2, r.cr=combn$a1, r.pd=combn$a2, p.cr=1-combn$p02, p.pd=combn$p02, USE.NAMES = F))
+    power.s1.IUT <- mapply(pow.fun.IUT, method="s2.f",  n1=combn$n1, r2.cr=combn$s2, r2.pd=combn$t2, n2=combn$n2, r.cr=combn$a1, r.pd=combn$a2, p.cr=combn$p11, p.pd=combn$p12, USE.NAMES = F)
+    result <- data.frame(combn, Error=sig.s1.IUT, Power=power.s1.IUT)
+    tmp <- subset(result, Error<=signif.level, Power>=power.level)
+    if (output.all==TRUE){
+      ## output all outcomes satisfying the limitations
+      print(tmp)
+    }
+    ## select the samplse size and boundaries by maximizing the power
+    print(tmp[tmp$Power==max(tmp$Power),],digits = 3)
+  }
