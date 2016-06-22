@@ -3,10 +3,10 @@ title: "Phase II Clinical Design Using Multinomial Distribution"
 author: "Rui Qin, Yalin Zhu, Bo Gao"
 date: "June 21, 2016"
 output:
-  html_document:
+  pdf_document:
     number_sections: yes
     toc: yes
-  pdf_document:
+  html_document:
     number_sections: yes
     toc: yes
 ---
