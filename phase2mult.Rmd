@@ -6,7 +6,7 @@ output:
   pdf_document:
     number_sections: yes
     toc: yes
-  html_document:
+html_document:
     number_sections: yes
     toc: yes
 ---
@@ -62,7 +62,7 @@ source(file="powfun_IUT.r")
 ## One-stage multinomial design
 
 ### Power function validation
-```{r echo=FALSE}
+```{r tidy=TRUE}
 # Test whole data
 s <- c(6,8,8,9,9,8,7,12,14,15,14,15,14,17,20,21,21,19,23,25,24,24,24,29,27,27,29,24)
 t <- c(19,24,22,21,16,10,5,23,25,22,16,12,7,22,22,18,13,7,19,17,12,8,13,12,7,9,6,4)
@@ -83,7 +83,7 @@ print(result.s1.IUT,digits=3)
 source(file = "searchfun_IUT.r")
 ```
 
-```{r}
+```{r tidy=TRUE}
 # set the intervals as +-1
 IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta =1, t.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 # defaut do not set the intervals
@@ -97,7 +97,7 @@ IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta = 1, t.delta = 1, n
 ## Two-stage multinomial design 
 
 ### Power function validation
-```{r}
+```{r tidy=TRUE}
 ## Test whole data
 s1 <- c(4,6,6,6,7,6,6,8,9,10,10,10,10,11,13,13,14,12,15,16,16,16,16,17,16,16,17,14)
 s2 <- c(0,0,1,0,2,2,1,1,5,5,3,4,4,4,7,6,8,3,9,9,8,9,9,8,10,10,11,10)
@@ -117,15 +117,14 @@ print(result.s2.sf.IUT,digits=3)
 
 ### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
 
- 
-```{r}
+```{r tidy=TRUE}
 IUT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 ```
 
 ## Two-stage multinomial design with futlity only
 
 ### Power function validation 
-```{r}
+```{r tidy=TRUE}
 # show the results of IUT for two-stage with early stop for only futility
 sig.s2.f.IUT <- pmax(mapply(IUT.power, method="s2.f",s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=0, USE.NAMES = F), 
                       mapply(IUT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
@@ -144,7 +143,7 @@ print(result.s2.f.IUT,digits=3)
 
 
  
-```{r}
+```{r tidy=TRUE}
 IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 ```
 
@@ -157,26 +156,63 @@ IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41,
 source(file="powfun_UIT.r")
 
 ```
-For one-stage design, the output is shown as follow:
-```{r}
+
+## One-stage multinomial design
+
+### Power function validation
+
+```{r tidy=TRUE}
 sig.s1.UIT <- mapply(UIT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s1.UIT <- mapply(UIT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
 result.s1.UIT <- data.frame(p0.s,p0.t,pCR=s,ePD=t,Sample.size=n, Significant.level=sig.s1.UIT, Power=power.s1.UIT)
 print(result.s1.UIT,digits = 3)
 ```
 
-For two-stage design, the output is shown as follow:
-```{r}
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
+```{r echo=FALSE}
+source(file = "searchfun_UIT.r")
+```
+
+```{r tidy=TRUE}
+# set the intervals as +-1
+UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta =1, t.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+# defaut do not set the intervals
+UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
+# output all valid outcome
+UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta = 1, t.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
+
+```
+
+## Two-stage multinomial design 
+
+### Power function validation
+```{r tidy=TRUE}
 sig.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
 result.s2.sf.UIT <- data.frame(p0.s,p0.t,pCR.rej=s1,ePD.rej=t1, pCR.acc=s2,ePD.acc=t2, n1, n2, Error=sig.s2.sf.UIT, Power=power.s2.sf.UIT)
 print(result.s2.sf.UIT,digits = 3)
 ```
 
-For two-stage design with futility only, the output is shown as follow:
-```{r}
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
+
+```{r tidy=TRUE}
+UIT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+```
+
+## Two-stage multinomial design with futlity only
+
+### Power function validation 
+```{r tidy=TRUE}
 sig.s2.f.UIT <- mapply(UIT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s2.f.UIT <- mapply(UIT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
 result.s2.f.UIT <- data.frame(p0.s,p0.t, pCR.acc=s2,ePD.acc=t2,n1, n2, Error=sig.s2.f.UIT, Power=power.s2.f.UIT)
 print(result.s2.f.UIT,digits=3)
+```
+
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
+
+```{r tidy=TRUE}
+UIT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 ```
