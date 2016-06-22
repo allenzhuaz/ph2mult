@@ -5,6 +5,7 @@ UIT.design <- function(method=design.methods, s1.rej, t1.rej, s1.acc, t1.acc, s2
     t <- seq(t2.rej-t.delta, t2.rej+t.delta)
     n <- seq(n-n.delta, n+n.delta)
     combn <- expand.grid(p0.s=p0.s, p0.t=p0.t, p1.s=p1.s, p1.t=p1.t, s=s, t=t, n=n)
+    
     err <- pmax(mapply(UIT.power, method="s1", s2.rej=combn$s, t2.rej=combn$t, n=combn$n, p.s=combn$p0.s, p.t=0, USE.NAMES = F), 
                 mapply(UIT.power, method="s1", s2.rej=combn$s, t2.rej=combn$t, n=combn$n, p.s=1-combn$p0.t, p.t=combn$p0.t, USE.NAMES = F))
     pow <- mapply(UIT.power, method="s1", s2.rej=combn$s, t2.rej=combn$t, n=combn$n, p.s=combn$p1.s, p.t=combn$p1.t, USE.NAMES = F)
@@ -13,8 +14,8 @@ UIT.design <- function(method=design.methods, s1.rej, t1.rej, s1.acc, t1.acc, s2
     t1 <- seq(t1.rej-t.delta, t1.rej+t.delta); t2 <- seq(t1.acc-t.delta, t1.acc+t.delta)
     a1 <- seq(s2.rej-s.delta, s2.rej+s.delta); a2 <- seq(t2.rej-t.delta, t2.rej+t.delta)
     n1 <- seq(n1-n.delta, n1+n.delta); n2 <- seq(n2-n.delta, n2+n.delta)
-    
     combn <- expand.grid(p0.s=p0.s, p0.t=p0.t, p1.s=p1.s, p1.t=p1.t, s1=s1, t1=t1, s2=s2, t2=t2,n1=n1, a1=a1, a2=a2, n2=n2)
+    
     err <- pmax(mapply(UIT.power, method="s2.sf", s1.rej=combn$s1, t1.rej=combn$t1, n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p0.s, p.t=0, USE.NAMES = F), 
                 mapply(UIT.power, method="s2.sf", s1.rej=combn$s1, t1.rej=combn$t1, n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=1-combn$p0.t, p.t=combn$p0.t, USE.NAMES = F))
     pow <- mapply(UIT.power, method="s2.sf", s1.rej=combn$s1, t1.rej=combn$t1, n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p1.s, p.t=combn$p1.t, USE.NAMES = F)
@@ -23,8 +24,8 @@ UIT.design <- function(method=design.methods, s1.rej, t1.rej, s1.acc, t1.acc, s2
     t2 <- seq(t1.acc-t.delta, t1.acc+t.delta)
     a1 <- seq(s2.rej-s.delta, s2.rej+s.delta); a2 <- seq(t2.rej-t.delta, t2.rej+t.delta)
     n1 <- seq(n1-n.delta, n1+n.delta); n2 <- seq(n2-n.delta, n2+n.delta)
-    
     combn <- expand.grid(p0.s=p0.s, p0.t=p0.t, p1.s=p1.s, p1.t=p1.t,  s2=s2, t2=t2,n1=n1, a1=a1, a2=a2, n2=n2)
+    
     err <- pmax(mapply(UIT.power, method="s2.f", n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p0.s, p.t=0, USE.NAMES = F), 
                 mapply(UIT.power, method="s2.f", n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=1-combn$p0.t, p.t=combn$p0.t, USE.NAMES = F))
     pow <- mapply(UIT.power, method="s2.f",  n1=combn$n1, s1.acc=combn$s2, t1.acc=combn$t2, n2=combn$n2, s2.rej=combn$a1, t2.rej=combn$a2, p.s=combn$p1.s, p.t=combn$p1.t, USE.NAMES = F)
