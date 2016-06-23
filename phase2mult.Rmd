@@ -111,7 +111,7 @@ n2 <- c(11,15,19,21,21,19,16,15,22,22,22,21,17,18,23,23,24,20,20,23,22,21,18,21,
 sig.s2.sf.IUT <- pmax(mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=0, USE.NAMES = F), 
                    mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
 power.s2.sf.IUT <- mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s2.sf.IUT <- data.frame(p0.s,p0.t, s1.rej=s1, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.sf.IUT, Power=power.s2.sf.IUT)
+result.s2.sf.IUT <- data.frame(p0.s,p0.t, s1.rej=s1, t1.rej=t1, s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.sf.IUT, Power=power.s2.sf.IUT)
 print(result.s2.sf.IUT,digits=3)
 ```
 
@@ -189,7 +189,7 @@ UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta = 1, t.delta = 1, n
 ```{r tidy=TRUE}
 sig.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s2.sf.UIT <- data.frame(p0.s,p0.t,s1.rej=s1,t1.rej=t1, s2.acc=s2,t2.acc=t2, N1=n1, N2=n2, Error=sig.s2.sf.UIT, Power=power.s2.sf.UIT)
+result.s2.sf.UIT <- data.frame(p0.s,p0.t,s1.rej=s1,t1.rej=t1, s1.acc=s2,t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.sf.UIT, Power=power.s2.sf.UIT)
 print(result.s2.sf.UIT,digits = 3)
 ```
 
