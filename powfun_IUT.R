@@ -28,7 +28,7 @@ IUT.power <- function(method = design.methods, s1.rej, s1.acc, t1.rej, t1.acc, s
         return(pmf)
     }
     method <- match.arg(method)
-    Pow <- switch(method, s1 = {
+    switch(method, s1 = {
         return(s1.pow(s2.rej, t2.rej, n, p.s, p.t))
     }, s2.sf = {
         ## this block uses the following parameters:s1.rej, t1.rej, s1.acc, t1.acc, s2.rej, t2.rej, n1, n2,
