@@ -116,10 +116,10 @@ IUT.power <- function(method = design.methods, s1.rej, s1.acc, t1.rej, t1.acc, s
     })
     
     if (output.all == FALSE) {
-        print(pmf)
+        return(pmf)
     } else if (output.all == TRUE) {
         PET <- 1 - PCon
         EN <- n1 * PET + (n1 + n2) * (1 - PET)
-        print(c(pmf, PET, EN))
+        return(c(pmf, PET, EN))
     }
 }
