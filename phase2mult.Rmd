@@ -74,7 +74,7 @@ p1.s <- p0.s+0.2; p1.t <- p0.t-0.2
 sig.s1.IUT <- pmax(mapply(IUT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p0.s, p.t=0, USE.NAMES = F), 
                    mapply(IUT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
 power.s1.IUT <- mapply(IUT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s1.IUT <- data.frame(p0.s,p0.t,pCR=s,ePD=t,N=n, Error=sig.s1.IUT, Power=power.s1.IUT)
+result.s1.IUT <- data.frame(p0.s,p0.t,s.rej=s, t.rej=t,N=n, Error=sig.s1.IUT, Power=power.s1.IUT)
 print(result.s1.IUT,digits=3)
 ```
 
@@ -87,7 +87,7 @@ source(file = "searchfun_IUT.r")
 # set the intervals as +-1
 IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta =1, t.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 # defaut do not set the intervals
-IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
+IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 # output all valid outcome
 IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta = 1, t.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
 
@@ -111,7 +111,7 @@ n2 <- c(11,15,19,21,21,19,16,15,22,22,22,21,17,18,23,23,24,20,20,23,22,21,18,21,
 sig.s2.sf.IUT <- pmax(mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=0, USE.NAMES = F), 
                    mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
 power.s2.sf.IUT <- mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s2.sf.IUT <- data.frame(p0.s,p0.t,s1,t1, s2,t2, a1, a2, N1=n1, N2=n2, Error=sig.s2.sf.IUT, Power=power.s2.sf.IUT)
+result.s2.sf.IUT <- data.frame(p0.s,p0.t, s1.rej=s1, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.sf.IUT, Power=power.s2.sf.IUT)
 print(result.s2.sf.IUT,digits=3)
 ```
 
@@ -135,7 +135,7 @@ nul <- mapply(IUT.power, method="s2.f",s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a
 alt <- mapply(IUT.power, method="s2.f", s1.acc=s2,  t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, output.all=TRUE, USE.NAMES = F)
 
 
-result.s2.f.IUT <- data.frame(p0.s,p0.t, s2,t2, a1, a2, N1=n1, N2=n2, Error=sig.s2.f.IUT, PET.nul=nul[2,], EN.nul=nul[3,], Power=alt[1,], PET.alt=alt[2,], EN.alt=alt[3,])
+result.s2.f.IUT <- data.frame(p0.s,p0.t, s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.f.IUT, PET.nul=nul[2,], EN.nul=nul[3,], Power=alt[1,], PET.alt=alt[2,], EN.alt=alt[3,])
 print(result.s2.f.IUT,digits=3)
 ```
 
@@ -164,7 +164,7 @@ source(file="powfun_UIT.r")
 ```{r tidy=TRUE}
 sig.s1.UIT <- mapply(UIT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s1.UIT <- mapply(UIT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s1.UIT <- data.frame(p0.s,p0.t,pCR=s,ePD=t,Sample.size=n, Significant.level=sig.s1.UIT, Power=power.s1.UIT)
+result.s1.UIT <- data.frame(p0.s,p0.t,s.rej=s,t.rej=t,N=n, Error=sig.s1.UIT, Power=power.s1.UIT)
 print(result.s1.UIT,digits = 3)
 ```
 
@@ -181,7 +181,6 @@ UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta =1, t.delta = 1, n.
 UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
 # output all valid outcome
 UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta = 1, t.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
-
 ```
 
 ## Two-stage multinomial design 
@@ -190,14 +189,14 @@ UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s.delta = 1, t.delta = 1, n
 ```{r tidy=TRUE}
 sig.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s2.sf.UIT <- data.frame(p0.s,p0.t,pCR.rej=s1,ePD.rej=t1, pCR.acc=s2,ePD.acc=t2, n1, n2, Error=sig.s2.sf.UIT, Power=power.s2.sf.UIT)
+result.s2.sf.UIT <- data.frame(p0.s,p0.t,s1.rej=s1,t1.rej=t1, s2.acc=s2,t2.acc=t2, N1=n1, N2=n2, Error=sig.s2.sf.UIT, Power=power.s2.sf.UIT)
 print(result.s2.sf.UIT,digits = 3)
 ```
 
 ### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
 
 ```{r tidy=TRUE}
-UIT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+UIT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all=TRUE)
 ```
 
 ## Two-stage multinomial design with futlity only
@@ -206,7 +205,7 @@ UIT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=
 ```{r tidy=TRUE}
 sig.s2.f.UIT <- mapply(UIT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
 power.s2.f.UIT <- mapply(UIT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
-result.s2.f.UIT <- data.frame(p0.s,p0.t, pCR.acc=s2,ePD.acc=t2,n1, n2, Error=sig.s2.f.UIT, Power=power.s2.f.UIT)
+result.s2.f.UIT <- data.frame(p0.s,p0.t, s1.acc=s2,t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.f.UIT, Power=power.s2.f.UIT)
 print(result.s2.f.UIT,digits=3)
 ```
 
@@ -214,5 +213,5 @@ print(result.s2.f.UIT,digits=3)
 ### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
 
 ```{r tidy=TRUE}
-UIT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+UIT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all=TRUE)
 ```
