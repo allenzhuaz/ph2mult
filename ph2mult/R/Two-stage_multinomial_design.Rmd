@@ -1,0 +1,215 @@
+---
+title: "Phase II single- or two-stage Multinomial Trial Design"
+author: "Yalin Zhu"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Two general principles of hypothesis testing
+
+This section reviews some key principles that provide a foundation for multiple tests. It begins with two general principles, known as the principles of union-intersection testing (UIT) and intersection-union testing (IUT), that define the underlying testing problem. 
+
+## Union-intersection testing (UIT)
+Within the union-intersection framework, one rejects the global hypothesis of no effect if there is
+evidence of a positive effect with respect to at least one individual objective.
+To provide a mathematical definition, let $H_1,\dots,H_m$ denote the hypotheses
+corresponding to the multiple objectives. The hypotheses are tested against
+the alternative hypotheses $K_1,\dots,K_m$. The global null hypothesis $H_{I}$ , defined as
+the intersection of the hypotheses, is tested versus the union of the alternative
+hypotheses ($K_{U}$):
+$$H_{I}: \bigcap\limits_{i=1}^{m} H_i \quad versus \quad K_{U}: \bigcup\limits_{i=1}^{m} K_i. $$
+
+
+## Intersection-union testing (IUT)
+Intersection-union testing arises naturally in studies when a significant outcome with respect to two or more objectives is required in order to declare the study successful. For example, new drugs/therapies for the treatment of *Skin Cancer* are required
+to demonstrate their effects on both superiority (eg: partial response) and futility (eg: early progression). In other words, the intersection-union method involves testing the union
+of the hypotheses ($H_U$) against the intersection of the alternative hypotheses
+($K_I$): 
+$$H_{U}: \bigcup\limits_{i=1}^{m} H_i \quad versus \quad K_{I}: \bigcap\limits_{i=1}^{m} K_i. $$
+
+We differentiate between objective response and early progression. Let $p_1$ and $p_2$ be the probabilities of response and early disease progression, respectively. Note that $p_1+p_2 \le 1$. Then the number of objective follow the trinomial distribution $Tri(p_1,p_2,1-(p_1+p_2))$. For most phase II window studies, there is interest in proceeding with further evaluation of the agent if the response rate is sufficiently high and the early progression rate is sufficiently low. Thus, the study is designed to test
+$$H_{U}: p_1 \le p_{01} \ or \ p_2 \le p_{02}  \quad versus \quad K_{I}: p_1 \ge p_{11} \ and \ p_2 \ge p_{12}, $$
+which belongs to IUT. 
+
+For an one-stage design, let $N$ denote a fixed sample size, $S$ denote the number of partial response and $T$ denote the number of early progressions. Then the rejection region of the null hypothesis $H_{U}$ can be denoted by 
+$$ S \ge s \quad and \quad T \le t,$$
+where $s+t \le N$.
+The acceptance region of the null can be denoted by
+$$ S < s' \quad or \quad T > t'.$$
+
+For a two-stage design, let $N_1$ denote a fixed sample size at the first stage, $S$ denote the number of partial response and $T$ denote the number of early progressions. Then at the first stage, the rejection region of the null hypothesis $H_{U}$ can be denoted by 
+$$ S \ge s_1 \quad and \quad T \le t_1,$$
+where $s_1+t_1 \le N_1$.
+The acceptance region of the null can be denoted by
+$$ S \le s_1'(<s_1)  \quad or \quad T \ge t_1'(>t_1).$$ 
+
+Stop the trial the second stage if the number of corresponding patients satisfies the rejection or acceptance condition, enroll additional $N_2$ patients and continue to the second stage otherwise. At the second stage, the rejection region of the null hypothesis $H_{U}$ can be denoted by 
+$$ S \ge s_2 \quad and \quad T \le t_2,$$ where $s_2+t_2 \le N_1+N_2$. We can also consider the acceptance region can be denoted by $$ S \ge s_2' \quad or \quad T \le t_2',$$  althogh the original paper does not mention the acceptance region for futility. 
+
+
+
+# The power function for multinomial design using IUT
+
+```{r echo=FALSE}
+source(file="powfun_IUT.r")
+```
+
+## One-stage multinomial design
+
+### Power function validation
+```{r tidy=TRUE}
+# Test whole data
+s <- c(6,8,8,9,9,8,7,12,14,15,14,15,14,17,20,21,21,19,23,25,24,24,24,29,27,27,29,24)
+t <- c(19,24,22,21,16,10,5,23,25,22,16,12,7,22,22,18,13,7,19,17,12,8,13,12,7,9,6,4)
+n <- c(25,36,39,45,44,39,33,35,44,47,44,46,42,39,47,49,49,44,42,47,45,45,37,45,42,36,39,28)
+p0.s <- unlist(mapply(rep,1:7,7:1))*0.1
+p0.t <- unlist(mapply(seq,9:3,3))*0.1
+p1.s <- p0.s+0.2; p1.t <- p0.t-0.2
+
+sig.s1.IUT <- pmax(mapply(IUT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p0.s, p.t=0, USE.NAMES = F), 
+                   mapply(IUT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
+power.s1.IUT <- mapply(IUT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
+result.s1.IUT <- data.frame(p0.s,p0.t,s.rej=s, t.rej=t,N=n, Error=sig.s1.IUT, Power=power.s1.IUT)
+print(result.s1.IUT,digits=3)
+```
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level, and record the computing process time.
+```{r echo=FALSE}
+source(file = "searchfun_IUT.r")
+```
+
+```{r tidy=TRUE}
+# set the intervals as +-1
+IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s2.rej.delta =1, t2.rej.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+# defaut do not set the intervals
+IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+# output all valid outcome
+IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s2.rej.delta = 1, t2.rej.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
+
+```
+
+
+## Two-stage multinomial design 
+
+### Power function validation
+```{r tidy=TRUE}
+## Test whole data
+s1 <- c(4,6,6,6,7,6,6,8,9,10,10,10,10,11,13,13,14,12,15,16,16,16,16,17,16,16,17,14)
+s2 <- c(0,0,1,0,2,2,1,1,5,5,3,4,4,4,7,6,8,3,9,9,8,9,9,8,10,10,11,10)
+t1 <- c(9,8,7,6,5,2,0,9,10,7,4,3,1,9,8,6,4,1,6,6,3,2,3,3,1,2,0,0)
+t2 <- c(13,15,15,13,11,9,5,16,16,15,12,8,6,16,14,13,9,8,12,12,9,7,10,11,6,8,5,4)
+a1 <- c(6,7,8,9,8,8,7,11,14,14,14,14,12,17,20,20,20,18,22,25,24,23,24,27,27,25,27,24)
+a2 <- c(18,22,22,20,15,10,5,21,25,21,16,12,6,21,22,17,13,7,19,17,12,7,13,11,7,8,6,4)
+n1 <- c(13,18,20,22,21,20,17,17,22,23,22,23,20,20,24,24,24,21,21,24,23,22,19,21,21,18,19,14)
+n2 <- c(11,15,19,21,21,19,16,15,22,22,22,21,17,18,23,23,24,20,20,23,22,21,18,21,21,15,17,14)
+# show the results of IUT for two-stage with early stop for both superority and futility
+sig.s2.sf.IUT <- pmax(mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=0, USE.NAMES = F), 
+                   mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
+power.s2.sf.IUT <- mapply(IUT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
+result.s2.sf.IUT <- data.frame(p0.s,p0.t, s1.rej=s1, t1.rej=t1, s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.sf.IUT, Power=power.s2.sf.IUT)
+print(result.s2.sf.IUT,digits=3)
+```
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level, and record the computing process time.
+
+```{r tidy=TRUE}
+IUT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s1.rej.delta =1, t1.rej.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+```
+
+## Two-stage multinomial design with futlity only
+
+### Power function validation 
+```{r tidy=TRUE}
+# show the results of IUT for two-stage with early stop for only futility
+sig.s2.f.IUT <- pmax(mapply(IUT.power, method="s2.f",s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=0, USE.NAMES = F), 
+                      mapply(IUT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=1-p0.t, p.t=p0.t, USE.NAMES = F))
+
+nul <- mapply(IUT.power, method="s2.f",s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, output.all=TRUE, USE.NAMES = F)
+
+
+alt <- mapply(IUT.power, method="s2.f", s1.acc=s2,  t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, output.all=TRUE, USE.NAMES = F)
+
+
+result.s2.f.IUT <- data.frame(p0.s,p0.t, s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.f.IUT, PET.nul=nul[2,], EN.nul=nul[3,], Power=alt[1,], PET.alt=alt[2,], EN.alt=alt[3,])
+print(result.s2.f.IUT,digits=3)
+```
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level, and record the computing process time.
+
+ 
+```{r tidy=TRUE}
+IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+```
+
+
+
+
+# The power function for UIT
+
+```{r echo=FALSE }
+source(file="powfun_UIT.r")
+
+```
+
+## One-stage multinomial design
+
+### Power function validation
+
+```{r tidy=TRUE }
+sig.s1.UIT <- mapply(UIT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
+power.s1.UIT <- mapply(UIT.power, method="s1", s2.rej=s, t2.rej=t, n=n, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
+result.s1.UIT <- data.frame(p0.s,p0.t,s.rej=s,t.rej=t,N=n, Error=sig.s1.UIT, Power=power.s1.UIT)
+print(result.s1.UIT,digits = 3)
+```
+
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level, and record the computing process time.
+```{r echo=FALSE }
+source(file = "searchfun_UIT.r")
+```
+
+```{r tidy=TRUE }
+# set the intervals as +-1
+UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s2.rej.delta =1, t2.rej.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
+# defaut do not set the intervals
+UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
+# output all valid outcome
+UIT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s2.rej.delta =1, t2.rej.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all = T)
+```
+
+## Two-stage multinomial design 
+
+### Power function validation
+```{r tidy=TRUE }
+sig.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
+power.s2.sf.UIT <- mapply(UIT.power, method="s2.sf",s1.rej=s1, s1.acc=s2, t1.rej=t1, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
+result.s2.sf.UIT <- data.frame(p0.s,p0.t,s1.rej=s1,t1.rej=t1, s1.acc=s2,t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.sf.UIT, Power=power.s2.sf.UIT)
+print(result.s2.sf.UIT,digits = 3)
+```
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level.
+
+```{r tidy=TRUE }
+UIT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s1.rej.delta =1, t1.rej.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all=TRUE)
+```
+
+## Two-stage multinomial design with futlity only
+
+### Power function validation 
+```{r tidy=TRUE }
+sig.s2.f.UIT <- mapply(UIT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p0.s, p.t=p0.t, USE.NAMES = F)
+power.s2.f.UIT <- mapply(UIT.power, method="s2.f", s1.acc=s2, t1.acc=t2, s2.rej=a1, t2.rej=a2, n1=n1, n2=n2, p.s=p1.s, p.t=p1.t, USE.NAMES = F)
+result.s2.f.UIT <- data.frame(p0.s,p0.t, s1.acc=s2,t1.acc=t2, s2.rej=a1, t2.rej=a2, N1=n1, N2=n2, Error=sig.s2.f.UIT, Power=power.s2.f.UIT)
+print(result.s2.f.UIT,digits=3)
+```
+
+
+### Find the rejection boundary for pCR and ePD based on pre-specified type I error rate and power level, and record the computing process time.
+
+```{r tidy=TRUE }
+UIT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all=TRUE)
+```
