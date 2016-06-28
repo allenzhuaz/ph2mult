@@ -12,7 +12,7 @@
 
 <meta name="author" content="Yalin Zhu" />
 
-<meta name="date" content="2016-06-27" />
+<meta name="date" content="2016-06-28" />
 
 <title>Phase II single- or two-stage Multinomial Trial Design</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Phase II single- or two-stage Multinomial Trial Design</h1>
 <h4 class="author"><em>Yalin Zhu</em></h4>
-<h4 class="date"><em>2016-06-27</em></h4>
+<h4 class="date"><em>2016-06-28</em></h4>
 
 
 
@@ -154,7 +154,7 @@ result.s1.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 <pre><code>##    p0.s p0.t p1.s p1.t s.rej t.rej  N Error Power
 ## 17 0.15 0.25  0.3  0.1    18    13 80 0.048 0.924
 ##    user  system elapsed 
-##    0.47    0.00    0.47</code></pre>
+##    0.45    0.00    0.46</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># defaut do not set the intervals</span>
 <span class="kw">IUT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, 
     <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>)</code></pre></div>
@@ -183,7 +183,7 @@ result.s1.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 ## 24 0.15 0.25  0.3  0.1    19    12 81 0.0292 0.874
 ## 27 0.15 0.25  0.3  0.1    19    13 81 0.0371 0.899
 ##    user  system elapsed 
-##    0.48    0.00    0.48</code></pre>
+##    0.49    0.00    0.50</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design" class="section level2">
@@ -262,7 +262,7 @@ result.s2.sf.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span
 ##     Error Power
 ## 81 0.0476 0.875
 ##    user  system elapsed 
-##   37.39    0.01   37.44</code></pre>
+##   37.02    0.00   37.13</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design-with-futlity-only" class="section level2">
@@ -357,7 +357,7 @@ result.s2.f.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 <pre><code>##   p0.s p0.t p1.s p1.t s1.acc t1.acc s2.rej t2.rej N1 N2  Error Power
 ## 9 0.15 0.25  0.3  0.1      7      5     18     14 41 41 0.0499 0.576
 ##    user  system elapsed 
-##   16.31    0.00   16.35</code></pre>
+##   16.19    0.00   16.24</code></pre>
 </div>
 </div>
 </div>
@@ -412,14 +412,14 @@ result.s1.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 <pre><code>##    p0.s p0.t p1.s p1.t s.rej t.rej  N  Error Power
 ## 23 0.15 0.25  0.3  0.1    18    12 81 0.0467 0.991
 ##    user  system elapsed 
-##    0.43    0.02    0.45</code></pre>
+##    0.47    0.00    0.46</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># defaut do not set the intervals</span>
 <span class="kw">UIT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, 
     <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>, <span class="dt">output.all =</span> T)</code></pre></div>
 <pre><code>##   p0.s p0.t p1.s p1.t s.rej t.rej  N  Error Power
 ## 1 0.15 0.25  0.3  0.1    18    12 80 0.0462  0.99
 ##    user  system elapsed 
-##    0.02    0.00    0.01</code></pre>
+##    0.01    0.00    0.02</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># output all valid outcome</span>
 <span class="kw">UIT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">s2.rej.delta =</span> <span class="dv">1</span>, 
     <span class="dt">t2.rej.delta =</span> <span class="dv">1</span>, <span class="dt">n.delta =</span> <span class="dv">1</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>, 
@@ -438,7 +438,7 @@ result.s1.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 ## 23 0.15 0.25  0.3  0.1    18    12 81 0.0467 0.991
 ## 24 0.15 0.25  0.3  0.1    19    12 81 0.0333 0.986
 ##    user  system elapsed 
-##    0.46    0.00    0.47</code></pre>
+##    0.47    0.00    0.47</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design-1" class="section level2">
@@ -556,7 +556,7 @@ result.s2.f.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 ## 3 0.15 0.25  0.3  0.1      7      5     18     12 41 41 0.0368 0.968
 ## 6 0.15 0.25  0.3  0.1      7      5     18     13 41 41 0.0427 0.971
 ##    user  system elapsed 
-##   24.88    0.00   24.89</code></pre>
+##   24.68    0.00   24.75</code></pre>
 </div>
 </div>
 </div>
