@@ -1,0 +1,3 @@
+IUT.design(method = "s2.f", s1.acc = 7, t1.acc = 5, s2.rej = 17, t2.rej = 13, 
+    n1 = 41, n2 = 41, s2.rej.delta = 1, t2.rej.delta = 1, p0.s = 0.15, p0.t = 0.25, 
+    p1.s = 0.3, p1.t = 0.1, signif.level = 0.1, power.level = 0.5, output = "admissible")
