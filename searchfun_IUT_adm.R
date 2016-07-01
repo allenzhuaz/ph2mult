@@ -4,6 +4,7 @@ IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, 
     n2, n, s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0, s2.rej.delta=0, t2.rej.delta=0, n1.delta=0,
     n2.delta=0, n.delta=0, p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
     show.time = TRUE, output=output.type) {
+  
   ## record the initial time
   if (show.time==TRUE) {ptm <- proc.time()}
     switch(method, s1 = {
@@ -96,10 +97,6 @@ IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, 
 
     print(na.omit(x), digits = 3)
  }
-    # if (output.all == TRUE) {
-    #     ## output all outcomes satisfying the limitations
-    #     print(tmp, digits = 3)
-    # } else print(tmp[tmp$Power == max(tmp$Power), ], digits = 3)
   ## record the completion time
     if (show.time==TRUE) {print(proc.time() - ptm)}
 }
