@@ -7,7 +7,6 @@ Maintainer: Yalin Zhu <yalin.zhu@regeneron.com>
 Description: More about what it does (maybe more than one line)
 License:  GPL (>= 2)
 LazyData: TRUE
-
 Imports:
     base
 Suggests:
