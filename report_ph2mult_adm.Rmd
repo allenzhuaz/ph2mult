@@ -1,0 +1,56 @@
+---
+title: "Admissible Multinomial Trial - IUT design Example"
+author: "Yalin Zhu"
+date: "July 5, 2016"
+output: pdf_document
+---
+
+
+
+# Multinomial Trial Design with Different Output Options
+
+In the following example, we provide four design methods for multinomial trial: Minimax (minimize the maximum sample size), Optimal (minimize the expected sample size), Admissible (minimize the Bayesian risk) and Maxpower (maximize the exact power level). 
+
+
+```{r}
+source(file="powfun_IUT.r")
+source(file="searchfun_IUT_adm.r")
+library(clinfun)
+```
+
+## Single-stage
+
+It should be noted that single-stage design only allows Minimax and Maxpower output methods.
+
+```{r tidy=TRUE, warning=FALSE}
+# Minimax
+IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s2.rej.delta = 1, t2.rej.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax")
+# Maxpower
+IUT.design(method="s1",s2.rej=18, t2.rej = 12, n=80, s2.rej.delta = 1, t2.rej.delta = 1, n.delta=1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "maxpower")
+```
+
+## Two-stage
+
+```{r tidy=TRUE, warning=FALSE}
+# Minimax
+IUT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s1.rej.delta =1, t1.rej.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax")
+# Optimal
+IUT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s1.rej.delta =1, t1.rej.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "optimal")
+# Admissible
+IUT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s1.rej.delta =1, t1.rej.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "admissible")
+# Maxpower
+IUT.design(method="s2.sf",s1.rej = 10, t1.rej = 3, s1.acc=8, t1.acc = 5, s2.rej=18, t2.rej = 12, n1=41, n2=41, s1.rej.delta =1, t1.rej.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "maxpower")
+```
+
+## Two-stage early terminate with futility only
+
+```{r error=TRUE, tidy=TRUE, warning=FALSE, message=FALSE}
+# Minimax
+suppressWarnings(IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s1.acc.delta =1, t1.acc.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax"))  
+# Optimal
+suppressWarnings(IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s1.acc.delta =1, t1.acc.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "optimal"))
+# Admissible
+suppressWarnings(IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s1.acc.delta =1, t1.acc.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "admissible"))
+# Maxpower
+suppressWarnings(IUT.design(method = "s2.f", s1.acc=7, t1.acc = 5, s2.rej=17, t2.rej = 13, n1=41, n2=41, s1.acc.delta =1, t1.acc.delta =1, s2.rej.delta =1, t2.rej.delta =1, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "maxpower"))
+```
