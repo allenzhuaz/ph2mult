@@ -76,29 +76,40 @@ IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, 
         names(combn) <- c("p0.s", "p0.t", "p1.s", "p1.t", "s1.acc", "t1.acc", "s2.rej", "t2.rej", "N1",
             "N2")
     })
+  
+  if (method !="s1"){  
     result <- data.frame(combn, Error = err, Power = pow, PET, EN)
     tmp <- subset(result, Error <= signif.level & Power >= power.level)
 
     y <- tmp[,c("PET","EN")];
     con.ind <- chull(y)[chull((y))==cummin(chull((y)))]
- if (method !="s1"){
     x <- switch (output,
-                 minimax = {subset(tmp , N1+N2 == min(N1+N2))},
-                 optimal = {subset(tmp , EN == min(EN))},
-                 maxpower  = {subset(tmp , Power == max(Power))},
+                 minimax = {subset(tmp , N1+N2 == min(N1+N2, na.rm = T))},
+                 optimal = {subset(tmp , EN == min(EN, na.rm = T))},
+                 maxpower  = {subset(tmp , Power == max(Power, na.rm = T))},
                  admissible = {
                    #     subset(result , n >= min(n) & n <= subset(result, EN.p0. == min(EN.p0.))$'n')[con.ind,]
                    #     result[con.ind,]
-                   subset(tmp[con.ind,],N1+N2 >= min(N1+N2) & N1+N2 <= subset(tmp, EN == min(EN))$'N1'+subset(tmp, EN == min(EN))$'N2')
-                 }
-
-    )
+                   subset(tmp[con.ind,],(N1+N2 >= min(N1+N2, na.rm = T)) & (N1+N2 <= subset(tmp, EN == min(EN, na.rm = T))$'N1'+subset(tmp, EN == min(EN, na.rm = T))$'N2'))
+                 })
     if(nrow(na.omit(x))==0) {
       errmesg <- paste("  No feasible solution found. \n\tIncrease maximum sample size.  Current nmax value = ",n1+n2+n1.delta+n2.delta,".",sep="")
       stop(message=errmesg)
     }
-    
-    print(na.omit(x), digits = 3)
- }
+    else print(na.omit(x), digits = 3)
+  }
+  
+  else {
+    result <- data.frame(combn, Error = err, Power = pow)
+    tmp <- subset(result, Error <= signif.level, Power >= power.level)
+    x <- switch (output,
+                 minimax = {subset(tmp , N == min(N, na.rm = T))},
+                 maxpower  = {subset(tmp , Power == max(Power, na.rm = T))})
+    if(nrow(na.omit(x))==0) {
+      errmesg <- paste("  No feasible solution found. \n\tIncrease maximum sample size.  Current nmax value = ",n,".",sep="")
+      stop(message=errmesg) 
+    }
+    else print(na.omit(x), digits = 3)
+  }       
     if (show.time==TRUE) {print(proc.time() - ptm)}
 }
