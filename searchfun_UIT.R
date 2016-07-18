@@ -1,4 +1,4 @@
-UIT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, s2.rej, t2.rej, n1, 
+UIT.design <- function(method = method = c("s1", "s2.sf", "s2.f"), s1.rej, t1.rej, s1.acc, t1.acc, s2.rej, t2.rej, n1, 
     n2, n, s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0, s2.rej.delta=0, t2.rej.delta=0, n1.delta=0, 
     n2.delta=0, n.delta=0, p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85, 
     output.all = FALSE) {
