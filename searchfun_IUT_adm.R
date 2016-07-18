@@ -1,9 +1,15 @@
-output.type <- c("minimax","optimal","maxpower","admissible")
-design.methods <- c("s1", "s2.sf", "s2.f")
-IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, s2.rej, t2.rej, n1,
-    n2, n, s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0, s2.rej.delta=0, t2.rej.delta=0, n1.delta=0,
-    n2.delta=0, n.delta=0, p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
-    show.time = TRUE, output=output.type) {
+IUT.design <- function(method = c("s1", "s2.sf", "s2.f"),
+                       s1.rej, t1.rej, s1.acc, t1.acc, s2.rej, t2.rej, n1, n2, n,
+                       s1.rej.delta=0, t1.rej.delta=0,
+                       s1.acc.delta=0, t1.acc.delta=0,
+                       s2.rej.delta=0, t2.rej.delta=0,
+                       n1.delta=0, n2.delta=0, n.delta=0,
+                       p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
+                       show.time = TRUE, output = c("minimax","optimal","maxpower","admissible")){
+
+  method <- match.arg(method)
+  output <- match.arg(output)
+
   ## record the initial time
   if (show.time==TRUE) {ptm <- proc.time()}
     switch(method, s1 = {
@@ -76,8 +82,8 @@ IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, 
         names(combn) <- c("p0.s", "p0.t", "p1.s", "p1.t", "s1.acc", "t1.acc", "s2.rej", "t2.rej", "N1",
             "N2")
     })
-  
-  if (method !="s1"){  
+
+  if (method !="s1"){
     result <- data.frame(combn, Error = err, Power = pow, PET, EN)
     tmp <- subset(result, Error <= signif.level & Power >= power.level)
 
@@ -98,7 +104,7 @@ IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, 
     }
     else print(na.omit(x), digits = 3)
   }
-  
+
   else {
     result <- data.frame(combn, Error = err, Power = pow)
     tmp <- subset(result, Error <= signif.level, Power >= power.level)
@@ -107,9 +113,9 @@ IUT.design <- function(method = design.methods, s1.rej, t1.rej, s1.acc, t1.acc, 
                  maxpower  = {subset(tmp , Power == max(Power, na.rm = T))})
     if(nrow(na.omit(x))==0) {
       errmesg <- paste("  No feasible solution found. \n\tIncrease maximum sample size.  Current nmax value = ",n,".",sep="")
-      stop(message=errmesg) 
+      stop(message=errmesg)
     }
     else print(na.omit(x), digits = 3)
-  }       
+  }
     if (show.time==TRUE) {print(proc.time() - ptm)}
 }
