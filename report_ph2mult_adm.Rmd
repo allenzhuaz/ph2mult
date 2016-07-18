@@ -1,7 +1,7 @@
 ---
 title: "Admissible Multinomial Trial - IUT design Example"
 author: "Yalin Zhu"
-date: "July 5, 2016"
+date: "July 18, 2016"
 output: pdf_document
 ---
 
@@ -13,8 +13,8 @@ In the following example, we provide four design methods for multinomial trial: 
 
 
 ```{r}
-source(file="powfun_IUT.r")
-source(file="searchfun_IUT_adm.r")
+source("powfun_IUT.r")
+source("searchfun_IUT_adm.r")
 library(clinfun)
 ```
 
