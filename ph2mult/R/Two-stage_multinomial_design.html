@@ -12,7 +12,7 @@
 
 <meta name="author" content="Yalin Zhu" />
 
-<meta name="date" content="2016-06-28" />
+<meta name="date" content="2016-07-18" />
 
 <title>Phase II single- or two-stage Multinomial Trial Design</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Phase II single- or two-stage Multinomial Trial Design</h1>
 <h4 class="author"><em>Yalin Zhu</em></h4>
-<h4 class="date"><em>2016-06-28</em></h4>
+<h4 class="date"><em>2016-07-18</em></h4>
 
 
 
@@ -80,10 +80,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="union-intersection-testing-uit" class="section level2">
 <h2>Union-intersection testing (UIT)</h2>
 <p>Within the union-intersection framework, one rejects the global hypothesis of no effect if there is evidence of a positive effect with respect to at least one individual objective. To provide a mathematical definition, let <span class="math inline">\(H_1,\dots,H_m\)</span> denote the hypotheses corresponding to the multiple objectives. The hypotheses are tested against the alternative hypotheses <span class="math inline">\(K_1,\dots,K_m\)</span>. The global null hypothesis <span class="math inline">\(H_{I}\)</span> , defined as the intersection of the hypotheses, is tested versus the union of the alternative hypotheses (<span class="math inline">\(K_{U}\)</span>): <span class="math display">\[H_{I}: \bigcap\limits_{i=1}^{m} H_i \quad versus \quad K_{U}: \bigcup\limits_{i=1}^{m} K_i. \]</span></p>
+<p>In the context of UIT,</p>
+<ul>
+<li><p>one rejects the global hypothesis of no effect if there is evidence of a possible effect with respect to at least one individual objective.</p></li>
+<li><p>carrying out the individual test at an unadjusted ?? level leads to an inflated probability of rejecting HI and can compromise the validity of statistical inference - a multiplicity adjustment is needed!</p></li>
+</ul>
 </div>
 <div id="intersection-union-testing-iut" class="section level2">
 <h2>Intersection-union testing (IUT)</h2>
 <p>Intersection-union testing arises naturally in studies when a significant outcome with respect to two or more objectives is required in order to declare the study successful. For example, new drugs/therapies for the treatment of <em>Skin Cancer</em> are required to demonstrate their effects on both superiority (eg: partial response) and futility (eg: early progression). In other words, the intersection-union method involves testing the union of the hypotheses (<span class="math inline">\(H_U\)</span>) against the intersection of the alternative hypotheses (<span class="math inline">\(K_I\)</span>): <span class="math display">\[H_{U}: \bigcup\limits_{i=1}^{m} H_i \quad versus \quad K_{I}: \bigcap\limits_{i=1}^{m} K_i. \]</span></p>
+<ul>
+<li><p>IUT naturally arises in studied when a significant outcome with respect to two or more objectives is required in order to declare the study successful.</p></li>
+<li><p>No multiplicity adjustment is necessary to control the size of a test but the individual hypotheses cannot be tested at levels higher than the nominal significance level either.</p></li>
+</ul>
 <p>We differentiate between objective response and early progression. Let <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> be the probabilities of response and early disease progression, respectively. Note that <span class="math inline">\(p_1+p_2 \le 1\)</span>. Then the number of objective follow the trinomial distribution <span class="math inline">\(Tri(p_1,p_2,1-(p_1+p_2))\)</span>. For most phase II window studies, there is interest in proceeding with further evaluation of the agent if the response rate is sufficiently high and the early progression rate is sufficiently low. Thus, the study is designed to test <span class="math display">\[H_{U}: p_1 \le p_{01} \ or \ p_2 \le p_{02}  \quad versus \quad K_{I}: p_1 \ge p_{11} \ and \ p_2 \ge p_{12}, \]</span> which belongs to IUT.</p>
 <p>For an one-stage design, let <span class="math inline">\(N\)</span> denote a fixed sample size, <span class="math inline">\(S\)</span> denote the number of partial response and <span class="math inline">\(T\)</span> denote the number of early progressions. Then the rejection region of the null hypothesis <span class="math inline">\(H_{U}\)</span> can be denoted by <span class="math display">\[ S \ge s \quad and \quad T \le t,\]</span> where <span class="math inline">\(s+t \le N\)</span>. The acceptance region of the null can be denoted by <span class="math display">\[ S &lt; s' \quad or \quad T &gt; t'.\]</span></p>
 <p>For a two-stage design, let <span class="math inline">\(N_1\)</span> denote a fixed sample size at the first stage, <span class="math inline">\(S\)</span> denote the number of partial response and <span class="math inline">\(T\)</span> denote the number of early progressions. Then at the first stage, the rejection region of the null hypothesis <span class="math inline">\(H_{U}\)</span> can be denoted by <span class="math display">\[ S \ge s_1 \quad and \quad T \le t_1,\]</span> where <span class="math inline">\(s_1+t_1 \le N_1\)</span>. The acceptance region of the null can be denoted by <span class="math display">\[ S \le s_1'(&lt;s_1)  \quad or \quad T \ge t_1'(&gt;t_1).\]</span></p>
@@ -154,14 +163,14 @@ result.s1.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 <pre><code>##    p0.s p0.t p1.s p1.t s.rej t.rej  N Error Power
 ## 17 0.15 0.25  0.3  0.1    18    13 80 0.048 0.924
 ##    user  system elapsed 
-##    0.45    0.00    0.46</code></pre>
+##    0.47    0.00    0.47</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># defaut do not set the intervals</span>
 <span class="kw">IUT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, 
     <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>)</code></pre></div>
 <pre><code>##   p0.s p0.t p1.s p1.t s.rej t.rej  N Error Power
 ## 1 0.15 0.25  0.3  0.1    18    12 80 0.048 0.899
 ##    user  system elapsed 
-##    0.02    0.00    0.02</code></pre>
+##    0.02    0.00    0.01</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># output all valid outcome</span>
 <span class="kw">IUT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">s2.rej.delta =</span> <span class="dv">1</span>, 
     <span class="dt">t2.rej.delta =</span> <span class="dv">1</span>, <span class="dt">n.delta =</span> <span class="dv">1</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>, 
@@ -183,7 +192,7 @@ result.s1.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 ## 24 0.15 0.25  0.3  0.1    19    12 81 0.0292 0.874
 ## 27 0.15 0.25  0.3  0.1    19    13 81 0.0371 0.899
 ##    user  system elapsed 
-##    0.49    0.00    0.50</code></pre>
+##    0.46    0.00    0.47</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design" class="section level2">
@@ -262,7 +271,7 @@ result.s2.sf.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span
 ##     Error Power
 ## 81 0.0476 0.875
 ##    user  system elapsed 
-##   37.02    0.00   37.13</code></pre>
+##   36.82    0.00   36.85</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design-with-futlity-only" class="section level2">
@@ -357,7 +366,7 @@ result.s2.f.IUT &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 <pre><code>##   p0.s p0.t p1.s p1.t s1.acc t1.acc s2.rej t2.rej N1 N2  Error Power
 ## 9 0.15 0.25  0.3  0.1      7      5     18     14 41 41 0.0499 0.576
 ##    user  system elapsed 
-##   16.19    0.00   16.24</code></pre>
+##   16.13    0.02   16.15</code></pre>
 </div>
 </div>
 </div>
@@ -412,14 +421,14 @@ result.s1.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 <pre><code>##    p0.s p0.t p1.s p1.t s.rej t.rej  N  Error Power
 ## 23 0.15 0.25  0.3  0.1    18    12 81 0.0467 0.991
 ##    user  system elapsed 
-##    0.47    0.00    0.46</code></pre>
+##    0.47    0.00    0.47</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># defaut do not set the intervals</span>
 <span class="kw">UIT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, 
     <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>, <span class="dt">output.all =</span> T)</code></pre></div>
 <pre><code>##   p0.s p0.t p1.s p1.t s.rej t.rej  N  Error Power
 ## 1 0.15 0.25  0.3  0.1    18    12 80 0.0462  0.99
 ##    user  system elapsed 
-##    0.01    0.00    0.02</code></pre>
+##    0.02    0.00    0.01</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># output all valid outcome</span>
 <span class="kw">UIT.design</span>(<span class="dt">method =</span> <span class="st">&quot;s1&quot;</span>, <span class="dt">s2.rej =</span> <span class="dv">18</span>, <span class="dt">t2.rej =</span> <span class="dv">12</span>, <span class="dt">n =</span> <span class="dv">80</span>, <span class="dt">s2.rej.delta =</span> <span class="dv">1</span>, 
     <span class="dt">t2.rej.delta =</span> <span class="dv">1</span>, <span class="dt">n.delta =</span> <span class="dv">1</span>, <span class="dt">p0.s =</span> <span class="fl">0.15</span>, <span class="dt">p0.t =</span> <span class="fl">0.25</span>, <span class="dt">p1.s =</span> <span class="fl">0.3</span>, <span class="dt">p1.t =</span> <span class="fl">0.1</span>, 
@@ -438,7 +447,7 @@ result.s1.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(p
 ## 23 0.15 0.25  0.3  0.1    18    12 81 0.0467 0.991
 ## 24 0.15 0.25  0.3  0.1    19    12 81 0.0333 0.986
 ##    user  system elapsed 
-##    0.47    0.00    0.47</code></pre>
+##    0.46    0.00    0.47</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design-1" class="section level2">
@@ -503,7 +512,7 @@ result.s2.sf.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span
 ## 6 0.0352 0.887
 ## 9 0.0461 0.941
 ##    user  system elapsed 
-##    4.26    0.00    4.26</code></pre>
+##     4.2     0.0     4.2</code></pre>
 </div>
 </div>
 <div id="two-stage-multinomial-design-with-futlity-only-1" class="section level2">
@@ -556,7 +565,7 @@ result.s2.f.UIT &lt;-<span class="st"> </span><span class="kw">data.frame</span>
 ## 3 0.15 0.25  0.3  0.1      7      5     18     12 41 41 0.0368 0.968
 ## 6 0.15 0.25  0.3  0.1      7      5     18     13 41 41 0.0427 0.971
 ##    user  system elapsed 
-##   24.68    0.00   24.75</code></pre>
+##   24.41    0.03   24.45</code></pre>
 </div>
 </div>
 </div>
