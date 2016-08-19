@@ -34,15 +34,19 @@
 #' ## Calculate power for single-stage design
 #' IUT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=p01+0.2, p.t=p02-0.2)
 #'
-#' ## Calculate type I error for two-stage design, output PET and EN under null hypothesis
-#' pmax(IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0, output.all=TRUE),
-#' IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02, output.all=TRUE))
+#' ## Calculate type I error for two-stage design
+#' max(IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0),
+#' IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02))
+#' ## Output PET and EN under null hypothesis
+#' IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)[-1]
 #' ## Calculate power for two-stage design
 #' IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
 #'
 #' ## Calculate type I error for two-stage design stopping for futility only, output PET and EN under null hypothesis
-#' pmax(IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0, output.all=TRUE),
-#' IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02, output.all=TRUE))
+#' max(IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0),
+#' IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02))
+#' ## Output PET and EN under null hypothesis
+#' IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)[-1]
 #' ## Calculate power for two-stage design
 #' IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
 #' @export
@@ -53,8 +57,8 @@
 
 # Power function for Intersection (rejection region) - Union (acceptance region) Test
 
-IUT.power <- function(method = c("s1", "s2", "s2.f"), 
-                      s1.rej, t1.rej, s1.acc, t1.acc, n1, 
+IUT.power <- function(method = c("s1", "s2", "s2.f"),
+                      s1.rej, t1.rej, s1.acc, t1.acc, n1,
                       s2.rej, t2.rej, n2,
                       p.s, p.t, output.all = FALSE) {
 
@@ -71,8 +75,7 @@ IUT.power <- function(method = c("s1", "s2", "s2.f"),
         pmf <- 0
         for (t in 0:min(n1 - s1.rej, t1.rej)) {
             for (s in s1.rej:(n1 - t)) {
-                pmf <- pmf + binom.dens(x = s, size = n1 - t, prob = p.s/(1 - p.t)) * binom.dens(x = t, size = n1,
-                  prob = p.t)
+                pmf <- pmf + binom.dens(x = s, size = n1 - t, prob = p.s/(1 - p.t)) * binom.dens(x = t, size = n1, prob = p.t)
             }
         }
         return(pmf)

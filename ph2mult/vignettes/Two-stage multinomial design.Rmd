@@ -23,6 +23,17 @@ the intersection of the hypotheses, is tested versus the union of the alternativ
 hypotheses ($K_{U}$):
 $$H_{I}: \bigcap\limits_{i=1}^{m} H_i \quad versus \quad K_{U}: \bigcup\limits_{i=1}^{m} K_i. $$
 
+In the context of UIT,
+
+* one rejects the global hypothesis of no effect if there is
+evidence of a possible effect with respect to at least one
+individual objective.
+
+* carrying out the individual test at an unadjusted ?? level leads
+to an inflated probability of rejecting HI and can compromise
+the validity of statistical inference - a multiplicity adjustment
+is needed
+
 
 ## Intersection-union testing (IUT)
 Intersection-union testing arises naturally in studies when a significant outcome with respect to two or more objectives is required in order to declare the study successful. For example, new drugs/therapies for the treatment of *Skin Cancer* are required

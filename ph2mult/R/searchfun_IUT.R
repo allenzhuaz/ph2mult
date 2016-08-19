@@ -4,7 +4,12 @@
 #' \eqn{H_0: p_1 \le p_{01}  OR   p_2 \ge p_{02}  versus H_1: p_1 \ge p_{11} > p_{01}  AND  p_2 \le p_{12} < p_{02}}
 #'
 #' @usage
-#' IUT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p.t, output.all, plot.out)
+#' IUT.design(method,
+#' s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2,
+#' s1.rej.delta, t1.rej.delta, s1.acc.delta, t1.acc.delta,
+#' s2.rej.delta, t2.rej.delta, n1.delta, n2.delta,
+#' p0.s, p0.t, p1.s, p1.t, signif.level, power.level,
+#' show.time, output, plot.out)
 #' @param method design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.
 #' @param s1.rej first stage responses threshold to stop the trial for efficacy. Applied for "s1" or "s2".
 #' @param t1.rej first stage disease progressions threshold to stop the trial for efficacy. Applied for "s1" or "s2".
@@ -42,19 +47,28 @@
 #' \emph{One- and two-stage designs for phase II window studies.}
 #' \emph{Statistics in medicine} \strong{, 26(13)}, 2604-2614.
 #'
+#' Simon, R. (1989).
+#' \emph{Optimal two-stage designs for phase II clinical trials.}
+#' \emph{Controlled clinical trials} \strong{10(1)}, 1-10.
+#'
+#' Jung, S. H., Lee, T., Kim, K., & George, S. L. (2004).
+#' \emph{Admissible two-stage designs for phase II cancer clinical trials.}
+#' \emph{Statistics in medicine} \strong{23(4)}, 561-569.
+#'
 #' @examples
 #' p01=0.1; p02=0.9
 #' ## Calculate type I error for single-stage design
-#' max(IUT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=p01, p.t=0),
-#' IUT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=1-p02, p.t=p02))
-#' ## Calculate power for single-stage design
-#' IUT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=p01+0.2, p.t=p02-0.2)
+#' IUT.design(method="s1",s1.rej=18, t1.rej = 12, n1=80,
+#' s1.rej.delta = 1, t1.rej.delta = 1, n1.delta=1,
+#' p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax")
 #'
 #' ## Designs for two-stage design, output PET and EN under null hypothesis
-#' IUT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40, s2.rej=18, t2.rej = 11, n2=40,
+#' IUT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40,
+#' s2.rej=18, t2.rej = 11, n2=40,
 #' n1.delta = 1, n2.delta = 1, s1.rej.delta =0, t1.rej.delta =0, s2.rej.delta =0, t2.rej.delta =0,
 #' p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax")
-#' IUT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40, s2.rej=18, t2.rej = 11, n2=40,
+#' IUT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40,
+#' s2.rej=18, t2.rej = 11, n2=40,
 #' n1.delta = 1, n2.delta = 1, s1.rej.delta =0, t1.rej.delta =0, s2.rej.delta =0, t2.rej.delta =0,
 #' p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "optimal")
 #'

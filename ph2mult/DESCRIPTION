@@ -2,14 +2,14 @@ Package: ph2mult
 Type: Package
 Title: Phase II Clinical Trial Design for Multinomial Endpoints
 Version: 0.1.0
-Author: Yalin Zhu
-Maintainer: Yalin Zhu <yalin.zhu@regeneron.com>
-Description: More about what it does (maybe more than one line)
-License:  GPL (>= 2)
+Author: Yalin Zhu, Rui Qin
+Maintainer: Yalin Zhu <yalin.zhu@outlook.com>
+Description: Provide multinomial design methods under IUT and UIT scheme for Phase II trial, the design types include : Minimax (minimize the maximum sample size), Optimal (minimize the expected sample size), Admissible (minimize the Bayesian risk) and Maxpower (maximize the exact power level).
+License: GPL (>= 2)
 LazyData: TRUE
 Imports:
-    base
+    clinfun
 Suggests:
-    clinfun,
     gsDesign,
     survival
+RoxygenNote: 5.0.1
