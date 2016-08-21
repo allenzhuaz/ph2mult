@@ -4,16 +4,17 @@
 \alias{UIT.power}
 \title{The power function for multinomial designs under union-intersection test (UIT)}
 \usage{
-UIT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p.t, output.all)
+UIT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p.t,
+output.all)
 }
 \arguments{
 \item{method}{design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.}
 
 \item{s1.rej}{first stage responses threshold to stop the trial for efficacy. Applied for "s1" or "s2".}
 
-\item{s1.acc}{first stage responses threshold to stop the trial for futility. Applied for "s2" or "s2.f".}
-
 \item{t1.rej}{first stage disease progressions threshold to stop the trial for efficacy. Applied for "s1" or "s2".}
+
+\item{s1.acc}{first stage responses threshold to stop the trial for futility. Applied for "s2" or "s2.f".}
 
 \item{t1.acc}{first stage disease progressions threshold to stop the trial for futility. Applied for "s2" or "s2.f".}
 
@@ -28,7 +29,7 @@ UIT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p
 \item{p.s}{pre-specified response rate, \eqn{p.s=p_{01}} for calculating type I error , \eqn{p=p_{11}} for calculating power.}
 
 \item{p.t}{pre-specified disease progression rate,  \eqn{p.s=p_{02}} for calculating type I error, \eqn{p=p_{12}} for calculating power.
-Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})})}
+Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})}}
 
 \item{output.all}{logical, if FALSE (default), only output the value of power or type I error, otherwise, also output the probability of early termination (PET) and expected sample size (EN). Applied for "s2" or "s2.f".}
 }
@@ -37,7 +38,7 @@ Note: type I error calculation needs to take maximum of the power function with 
 }
 \description{
 Calculate the type I error or power of a multinomial (response and disease progression) single- or two-stage design under UIT:
-\eqn{H_0: p_1 \le p_{01}  AND   p_2 \ge p_{02}  versus H_1: p_1 \ge p_{11} > p_{01}  OR  p_2 \le p_{12} < p_{02}}
+\eqn{H_0: p_1 \le p_{01} \  AND  \ p_2 \ge p_{02} \ versus \ H_1: p_1 \ge p_{11} > p_{01} \ OR \ p_2 \le p_{12} < p_{02}}
 (Note: original Zee et al. (1999) set up the correct hypotheses, but did not make a match decision.)
 }
 \examples{
@@ -48,14 +49,19 @@ UIT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=p01, p.t=p02)
 UIT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=p01+0.2, p.t=p02-0.2)
 
 ## Calculate type I error for two-stage design, output PET and EN under null hypothesis
-UIT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)
+UIT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)
 ## Calculate power for two-stage design
-UIT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
+UIT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
 
-## Calculate type I error for two-stage design stopping for futility only, output PET and EN under null hypothesis
-UIT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)
+## Calculate type I error for two-stage design stopping for futility only,
+## output PET and EN under null hypothesis
+UIT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)
 ## Calculate power for two-stage design
-UIT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
+UIT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
 }
 \references{
 Zee, B., Melnychuk, D., Dancey, J., & Eisenhauer, E. (1999).

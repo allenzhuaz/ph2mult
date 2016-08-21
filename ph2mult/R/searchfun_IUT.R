@@ -1,15 +1,15 @@
 #' The design function for multinomial designs under intersection-union test (IUT)
 #'
 #' Search the type I error or power of a multinomial (response and disease progression) single- or two-stage design under IUT:
-#' \eqn{H_0: p_1 \le p_{01}  OR   p_2 \ge p_{02}  versus H_1: p_1 \ge p_{11} > p_{01}  AND  p_2 \le p_{12} < p_{02}}
+#' \eqn{H_0: p_1 \le p_{01} \ OR \  p_2 \ge p_{02} \ versus \ H_1: p_1 \ge p_{11} > p_{01} \ AND \ p_2 \le p_{12} < p_{02}}
 #'
 #' @usage
-#' IUT.design(method,
+#' IUT.design(method = c("s1", "s2", "s2.f"),
 #' s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2,
-#' s1.rej.delta, t1.rej.delta, s1.acc.delta, t1.acc.delta,
-#' s2.rej.delta, t2.rej.delta, n1.delta, n2.delta,
-#' p0.s, p0.t, p1.s, p1.t, signif.level, power.level,
-#' show.time, output, plot.out)
+#' s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0,
+#' s2.rej.delta=0, t2.rej.delta=0, n1.delta=0, n2.delta=0,
+#' p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
+#' show.time = TRUE, output = c("minimax","optimal","maxpower","admissible"), plot.out=FALSE)
 #' @param method design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.
 #' @param s1.rej first stage responses threshold to stop the trial for efficacy. Applied for "s1" or "s2".
 #' @param t1.rej first stage disease progressions threshold to stop the trial for efficacy. Applied for "s1" or "s2".
@@ -31,11 +31,12 @@
 #' @param p1.s pre-specified response rate under alternative hypothesis.
 #' @param p0.t pre-specified disease progression rate under null hypothesis.
 #' @param p1.t pre-specified disease progression rate under alternative hypothesis.
-#' Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})})
+#' Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})}
 #' @param signif.level pre-specified significant level.
 #' @param power.level pre-specified power level.
 #' @param show.time logical; if TRUE (default), show the calculation time for the search function.
-#' @param output the output types of design, choose from "minimax","optimal","admissible" and"maxpower".
+#' @param output the output types of design, choose from "minimax","optimal","admissible" and
+#' "maxpower".
 #' @param plot.out logical; if TRUE, output a plot for  design selection.
 #' @return
 #' \item{boundset}{the boundaries set satisfying the design types properties: \eqn{s.rej}, \eqn{t.rej} and \eqn{N} for "s1",
@@ -64,14 +65,13 @@
 #'
 #' ## Designs for two-stage design, output PET and EN under null hypothesis
 #' IUT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40,
-#' s2.rej=18, t2.rej = 11, n2=40,
-#' n1.delta = 1, n2.delta = 1, s1.rej.delta =0, t1.rej.delta =0, s2.rej.delta =0, t2.rej.delta =0,
-#' p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax")
+#' s2.rej=18, t2.rej = 11, n2=40, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "minimax")
 #' IUT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40,
-#' s2.rej=18, t2.rej = 11, n2=40,
-#' n1.delta = 1, n2.delta = 1, s1.rej.delta =0, t1.rej.delta =0, s2.rej.delta =0, t2.rej.delta =0,
-#' p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "optimal")
+#' s2.rej=18, t2.rej = 11, n2=40, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output = "optimal")
 #'
+#' @importFrom grDevices chull
+#' @import graphics
+#' @import stats
 #' @export
 
 # Specify the clinical design methods: 's1' indicates one-stage design; 's2' indicates two-stage
@@ -162,7 +162,7 @@ IUT.design <- function(method = c("s1", "s2", "s2.f"),
                       n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2, p.s = combn$p0.s, p.t = combn$p0.t, output.all=TRUE, USE.NAMES = F)[2]
         EN <- mapply(IUT.power, method = "s2.f", n1 = combn$n1, s1.acc = combn$s2, t1.acc = combn$t2,
                      n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2, p.s = combn$p0.s, p.t = combn$p0.t, output.all=TRUE, USE.NAMES = F)[3]
-
+Error=Power=N1=N2=N=NULL
         names(combn) <- c("p0.s", "p0.t", "p1.s", "p1.t", "s1.acc", "t1.acc", "s2.rej", "t2.rej", "N1",
             "N2")
     })
@@ -174,21 +174,7 @@ IUT.design <- function(method = c("s1", "s2", "s2.f"),
     y <- tmp[,c("PET","EN")];
     con.ind <- chull(y)[chull((y))==cummin(chull((y)))]
 
-    plot.ph2mult <- function(x, ...) {
-      xout <- x
-      n <- nrow(xout)
-      maxN <- xout[,"N1"]+xout[,"N2"]
-      nmima <- ((1:n)[maxN==min(maxN)])[1]
-      nopt <- ((1:n)[xout[,"EN"]==min(xout[,"EN"])])[1]
-      nopt1 <- min(nopt+5,n)
-      nadm <- setdiff(con.ind, c(1, nopt))
-      npow <- ((1:n)[result[,"Power"]==max(result[,"Power"])])[1]
-      plot(maxN[1:nopt1],xout[1:nopt1,"EN"],type="l",xlab="Maximum Sample Size N = N1 + N2" ,ylab=expression(paste("E( N | ",p[0], " )")), main = "Two-stage Multinomial Designs")
-      points(maxN[nmima],xout[1,"EN"],pch="M")
-      points(maxN[nopt],xout[nopt,"EN"],pch="O")
-      points(maxN[nadm],xout[nadm,"EN"],pch="A")
-      points(maxN[npow],xout[npow,"EN"],pch="P")
-    }
+
 
     x <- switch (output,
                  minimax = {subset(tmp , N1+N2 == min(N1+N2, na.rm = T))},
@@ -206,9 +192,21 @@ IUT.design <- function(method = c("s1", "s2", "s2.f"),
     else{
       print(na.omit(x), digits = 3)
       if (plot.out==TRUE){
-        plot.ph2mult(tmp)
+          xout <- tmp
+          n <- nrow(xout)
+          maxN <- xout[,"N1"]+xout[,"N2"]
+          nmima <- ((1:n)[maxN==min(maxN)])[1]
+          nopt <- ((1:n)[xout[,"EN"]==min(xout[,"EN"])])[1]
+          nopt1 <- min(nopt+5,n)
+          nadm <- setdiff(con.ind, c(1, nopt))
+          npow <- ((1:n)[result[,"Power"]==max(result[,"Power"])])[1]
+          plot(maxN[1:nopt1],xout[1:nopt1,"EN"],type="l",xlab="Maximum Sample Size N = N1 + N2" ,ylab=expression(paste("E( N | ",p[0], " )")), main = "Two-stage Multinomial Designs")
+          points(maxN[nmima],xout[1,"EN"],pch="M")
+          points(maxN[nopt],xout[nopt,"EN"],pch="O")
+          points(maxN[nadm],xout[nadm,"EN"],pch="A")
+          points(maxN[npow],xout[npow,"EN"],pch="P")
       }
-      }
+    }
   }
 
   else {

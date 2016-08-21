@@ -9,13 +9,13 @@ binom.power(r1,n1,r,n,p)
 \arguments{
 \item{r1}{first stage threshold to stop the trial for futility.}
 
+\item{n1}{first stage sample size.}
+
 \item{r}{overall threshold to stop the trial for futility.}
 
-\item{n}{first stage sample size.}
+\item{n}{total sample size.}
 
 \item{p}{pre-specified response rate, \eqn{p=p_0} for calculating type I error, \eqn{p=p_1} for calculating power.}
-
-\item{n}{total sample size.}
 }
 \value{
 \item{prob}{the power function: \eqn{\alpha = Pr(R \le r| p=p_0)} or \eqn{1-\beta=Pr(R \le r| p=p_1)}}

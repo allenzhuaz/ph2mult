@@ -4,7 +4,8 @@
 \alias{IUT.power}
 \title{The power function for multinomial designs under intersection-union test (IUT)}
 \usage{
-IUT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p.t, output.all)
+IUT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p.t,
+output.all)
 }
 \arguments{
 \item{method}{design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.}
@@ -28,7 +29,7 @@ IUT.power(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2, p.s, p
 \item{p.s}{pre-specified response rate, \eqn{p.s=p_{01}} for calculating type I error , \eqn{p=p_{11}} for calculating power.}
 
 \item{p.t}{pre-specified disease progression rate,  \eqn{p.s=p_{02}} for calculating type I error, \eqn{p=p_{12}} for calculating power.
-Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})})}
+Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})}}
 
 \item{output.all}{logical, if FALSE (default), only output the value of power or type I error, otherwise, also output the probability of early termination (PET) and expected sample size (EN). Applied for "s2" or "s2.f".}
 }
@@ -37,7 +38,7 @@ Note: type I error calculation needs to take maximum of the power function with 
 }
 \description{
 Calculate the type I error or power of a multinomial (response and disease progression) single- or two-stage design under IUT:
-\eqn{H_0: p_1 \le p_{01}  OR   p_2 \ge p_{02}  versus H_1: p_1 \ge p_{11} > p_{01}  AND  p_2 \le p_{12} < p_{02}}
+\eqn{H_0: p_1 \le p_{01} \  OR  \ p_2 \ge p_{02} \ versus \ H_1: p_1 \ge p_{11} > p_{01} \ AND \ p_2 \le p_{12} < p_{02}}
 }
 \examples{
 p01=0.1; p02=0.9
@@ -48,20 +49,29 @@ IUT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=1-p02, p.t=p02))
 IUT.power(method="s1", s1.rej=6, t1.rej=19, n1=25, p.s=p01+0.2, p.t=p02-0.2)
 
 ## Calculate type I error for two-stage design
-max(IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0),
-IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02))
+max(IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0),
+IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02))
 ## Output PET and EN under null hypothesis
-IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)[-1]
+IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)[-1]
 ## Calculate power for two-stage design
-IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
+IUT.power(method="s2", s1.rej=4, t1.rej=9, s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
 
-## Calculate type I error for two-stage design stopping for futility only, output PET and EN under null hypothesis
-max(IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0),
-IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02))
+## Calculate type I error for two-stage design stopping for futility only,
+## output PET and EN under null hypothesis
+max(IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=0),
+IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=1-p02, p.t=p02))
 ## Output PET and EN under null hypothesis
-IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)[-1]
+IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01, p.t=p02, output.all=TRUE)[-1]
 ## Calculate power for two-stage design
-IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13, s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
+IUT.power(method="s2.f", s1.acc=0, t1.acc=13, n1=13,
+s2.rej=6, t2.rej=18, n2=11, p.s=p01+0.2, p.t=p02-0.2)
 }
 \references{
 Chang, M. N., Devidas, M., & Anderson, J. (2007).

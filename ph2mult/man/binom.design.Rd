@@ -4,10 +4,11 @@
 \alias{binom.design}
 \title{The design function for Simon (admissible) two-stage design}
 \usage{
-binom.design(type, p0 , p1, signif.level, power.level, plot.out)
+binom.design(type = c("minimax","optimal","maxpower","admissible"), p0, p1,
+signif.level=0.05, power.level=0.85, nmax=100, plot.out = FALSE)
 }
 \arguments{
-\item{type}{the output types of design, choose from "minimax","optimal","admissible" and"maxpower"}
+\item{type}{the output types of design, choose from "minimax","optimal","admissible" and "maxpower"}
 
 \item{p0}{undesirable response rate.}
 
@@ -16,6 +17,8 @@ binom.design(type, p0 , p1, signif.level, power.level, plot.out)
 \item{signif.level}{threshold for the probability of declaring drug desirable under p0.}
 
 \item{power.level}{threshold for the probability of declaring drug desirable under p1.}
+
+\item{nmax}{maximum total sample size}
 
 \item{plot.out}{logical; if FALSE (default), do not output plot, otherwise, output a plot for  design selection.}
 }
@@ -27,7 +30,8 @@ Search criterion to find the Optimal, Minimax, Admissible and
 Maximized power design stopping boundary and corresponding sample size
 }
 \examples{
-binom.design(type = "admissible", p0 = 0.15, p1 = 0.3, signif.level = 0.05, power.level = 0.9, plot.out = T)
+binom.design(type = "admissible", p0 = 0.15, p1 = 0.3, signif.level = 0.05, power.level = 0.9,
+plot.out = TRUE)
 }
 \references{
 Simon, R. (1989).

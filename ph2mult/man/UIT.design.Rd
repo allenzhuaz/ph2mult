@@ -5,10 +5,9 @@
 \title{The design function for multinomial designs under union-intersection test (UIT)}
 \usage{
 UIT.design(method, s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2,
-s1.rej.delta, t1.rej.delta, s1.acc.delta, t1.acc.delta, n1.delta,
-s2.rej.delta, t2.rej.delta, n2.delta,
-p0.s, p0.t, p1.s, p1.t, signif.level, power.level,
-output.all = FALSE, show.time = TRUE)
+s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0,
+s2.rej.delta=0, t2.rej.delta=0, n1.delta=0, n2.delta=0, p0.s, p0.t, p1.s, p1.t,
+signif.level = 0.05, power.level = 0.85, output.all = FALSE, show.time = TRUE)
 }
 \arguments{
 \item{method}{design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.}
@@ -52,7 +51,7 @@ output.all = FALSE, show.time = TRUE)
 \item{p1.s}{pre-specified response rate under alternative hypothesis.}
 
 \item{p1.t}{pre-specified disease progression rate under alternative hypothesis.
-Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})})}
+Note: type I error calculation needs to take maximum of the power function with \eqn{(p.s,p.t)=(p_{01},0)} and \eqn{(p.s,p.t)=(1-p_{02},p_{02})}}
 
 \item{signif.level}{pre-specified significant level.}
 
@@ -70,20 +69,17 @@ Note: type I error calculation needs to take maximum of the power function with 
 }
 \description{
 Search the type I error or power of a multinomial (response and disease progression) single- or two-stage design under IUT:
-\eqn{H_0: p_1 \le p_{01}  AND   p_2 \ge p_{02}  versus H_1: p_1 \ge p_{11} > p_{01}  OR  p_2 \le p_{12} < p_{02}}
+\eqn{H_0: p_1 \le p_{01} \ AND  \ p_2 \ge p_{02} \ versus \ H_1: p_1 \ge p_{11} > p_{01} \ OR  \ p_2 \le p_{12} < p_{02}}
 }
 \examples{
 
 ## Calculate type I error for single-stage design
 UIT.design(method="s1",s1.rej=18, t1.rej = 12, n1=80,
-s1.rej.delta = 1, t1.rej.delta = 1, n1.delta=1,
 p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1)
 
 ## Designs for two-stage design, output PET and EN under null hypothesis
 UIT.design(method="s2",s1.rej = 11, t1.rej = 4, s1.acc=8, t1.acc = 5, n1=40,
-s2.rej=18, t2.rej = 11, n2=40,
-n1.delta = 1, n2.delta = 1, s1.rej.delta =0, t1.rej.delta =0, s2.rej.delta =0, t2.rej.delta =0,
-p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all=TRUE)
+s2.rej=18, t2.rej = 11, n2=40, p0.s = 0.15, p0.t = 0.25, p1.s = 0.3, p1.t= 0.1, output.all=TRUE)
 
 }
 \references{
