@@ -1,3 +1,3 @@
 # ph2mult
-Multinomial two-stage clinical trial design for phase II study
+Phase II clinical trial design for multiple endpoints
 
