@@ -1,7 +1,7 @@
 Package: ph2mult
 Type: Package
 Title: Phase II Clinical Trial Design for Multinomial Endpoints
-Version: 0.1.0
+Version: 0.1.1
 Author: Yalin Zhu, Rui Qin
 Maintainer: Yalin Zhu <yalin.zhu@outlook.com>
 Description: Provide multinomial design methods under intersection-union test (IUT) and union-intersection test (UIT) scheme for Phase II trial. The design types include : Minimax (minimize the maximum sample size), Optimal (minimize the expected sample size), Admissible (minimize the Bayesian risk) and Maxpower (maximize the exact power level).

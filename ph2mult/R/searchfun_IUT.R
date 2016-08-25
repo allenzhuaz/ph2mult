@@ -9,7 +9,7 @@
 #' s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0,
 #' s2.rej.delta=0, t2.rej.delta=0, n1.delta=0, n2.delta=0,
 #' p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
-#' show.time = TRUE, output = c("minimax","optimal","maxpower","admissible"), plot.out=FALSE)
+#' show.time = TRUE, output = c("minimax","optimal","maxpower","admissible", "all"), plot.out=FALSE)
 #' @param method design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.
 #' @param s1.rej first stage responses threshold to stop the trial for efficacy. Applied for "s1" or "s2".
 #' @param t1.rej first stage disease progressions threshold to stop the trial for efficacy. Applied for "s1" or "s2".
@@ -35,8 +35,8 @@
 #' @param signif.level pre-specified significant level.
 #' @param power.level pre-specified power level.
 #' @param show.time logical; if TRUE (default), show the calculation time for the search function.
-#' @param output the output types of design, choose from "minimax","optimal","admissible" and
-#' "maxpower".
+#' @param output the output types of design, choose from "minimax","optimal","admissible",
+#' "maxpower" and "all".
 #' @param plot.out logical; if TRUE, output a plot for  design selection.
 #' @return
 #' \item{boundset}{the boundaries set satisfying the design types properties: \eqn{s.rej}, \eqn{t.rej} and \eqn{N} for "s1",
@@ -89,7 +89,7 @@ IUT.design <- function(method = c("s1", "s2", "s2.f"),
                        s2.rej.delta=0, t2.rej.delta=0,
                        n1.delta=0, n2.delta=0,
                        p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
-                       show.time = TRUE, output = c("minimax","optimal","maxpower","admissible"), plot.out=FALSE){
+                       show.time = TRUE, output = c("minimax","optimal","maxpower","admissible", "all"), plot.out=FALSE){
 
   method <- match.arg(method)
   output <- match.arg(output)
@@ -131,11 +131,11 @@ IUT.design <- function(method = c("s1", "s2", "s2.f"),
 
         PET <- mapply(IUT.power, method = "s2", s1.rej = combn$s1, t1.rej = combn$t1, n1 = combn$n1,
                       s1.acc = combn$s2, t1.acc = combn$t2, n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2,
-                      p.s = combn$p0.s, p.t = combn$p0.t, output.all= TRUE, USE.NAMES = F)[2]
+                      p.s = combn$p0.s, p.t = combn$p0.t, output.all= TRUE, USE.NAMES = F)[2,]
 
         EN <- mapply(IUT.power, method = "s2", s1.rej = combn$s1, t1.rej = combn$t1, n1 = combn$n1,
                       s1.acc = combn$s2, t1.acc = combn$t2, n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2,
-                      p.s = combn$p0.s, p.t = combn$p0.t, output.all= TRUE, USE.NAMES = F)[3]
+                      p.s = combn$p0.s, p.t = combn$p0.t, output.all= TRUE, USE.NAMES = F)[3,]
 
         names(combn) <- c("p0.s", "p0.t", "p1.s", "p1.t", "s1.rej", "t1.rej", "s1.acc", "t1.acc", "s2.rej",
             "t2.rej", "N1", "N2")
@@ -159,12 +159,11 @@ IUT.design <- function(method = c("s1", "s2", "s2.f"),
             USE.NAMES = F)
 
         PET <- mapply(IUT.power, method = "s2.f", n1 = combn$n1, s1.acc = combn$s2, t1.acc = combn$t2,
-                      n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2, p.s = combn$p0.s, p.t = combn$p0.t, output.all=TRUE, USE.NAMES = F)[2]
+                      n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2, p.s = combn$p0.s, p.t = combn$p0.t, output.all=TRUE, USE.NAMES = F)[2,]
         EN <- mapply(IUT.power, method = "s2.f", n1 = combn$n1, s1.acc = combn$s2, t1.acc = combn$t2,
-                     n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2, p.s = combn$p0.s, p.t = combn$p0.t, output.all=TRUE, USE.NAMES = F)[3]
+                     n2 = combn$n2, s2.rej = combn$a1, t2.rej = combn$a2, p.s = combn$p0.s, p.t = combn$p0.t, output.all=TRUE, USE.NAMES = F)[3,]
 Error=Power=N1=N2=N=NULL
-        names(combn) <- c("p0.s", "p0.t", "p1.s", "p1.t", "s1.acc", "t1.acc", "s2.rej", "t2.rej", "N1",
-            "N2")
+        names(combn) <- c("p0.s", "p0.t", "p1.s", "p1.t", "s1.acc", "t1.acc", "s2.rej", "t2.rej", "N1", "N2")
     })
 
   if (method !="s1"){
@@ -177,20 +176,20 @@ Error=Power=N1=N2=N=NULL
 
 
     x <- switch (output,
+                 all = {tmp},
                  minimax = {subset(tmp , N1+N2 == min(N1+N2, na.rm = T))},
                  optimal = {subset(tmp , EN == min(EN, na.rm = T))},
                  maxpower  = {subset(tmp , Power == max(Power, na.rm = T))},
                  admissible = {
                    #     subset(result , n >= min(n) & n <= subset(result, EN.p0. == min(EN.p0.))$'n')[con.ind,]
                    #     result[con.ind,]
-                   subset(tmp[con.ind,],(N1+N2 >= min(N1+N2, na.rm = T)) & (N1+N2 <= subset(tmp, EN == min(EN, na.rm = T))$'N1'+subset(tmp, EN == min(EN, na.rm = T))$'N2'))
+                   subset(tmp[con.ind,],(N1+N2 >= min(N1+N2, na.rm = T)) & (EN == min(EN, na.rm = T)))
                  })
     if(nrow(na.omit(x))==0) {
       errmesg <- paste("  No feasible solution found. \n\tIncrease maximum sample size.  Current nmax value = ",n1+n2+n1.delta+n2.delta,".",sep="")
       stop(message=errmesg)
     }
     else{
-      print(na.omit(x), digits = 3)
       if (plot.out==TRUE){
           xout <- tmp
           n <- nrow(xout)
@@ -206,20 +205,22 @@ Error=Power=N1=N2=N=NULL
           points(maxN[nadm],xout[nadm,"EN"],pch="A")
           points(maxN[npow],xout[npow,"EN"],pch="P")
       }
-    }
+      return(na.omit(x))
+      }
   }
 
   else {
     result <- data.frame(combn, Error = err, Power = pow)
     tmp <- subset(result, Error <= signif.level, Power >= power.level)
     x <- switch (output,
+                 all = {tmp},
                  minimax = {subset(tmp , N == min(N, na.rm = T))},
                  maxpower  = {subset(tmp , Power == max(Power, na.rm = T))})
     if(nrow(na.omit(x))==0) {
-      errmesg <- paste("  No feasible solution found. \n\tIncrease maximum sample size.  Current nmax value = ",n,".",sep="")
+      errmesg <- paste("No feasible solution found. \n\tIncrease maximum sample size.  Current nmax value = ",n,".",sep="")
       stop(message=errmesg)
     }
-    else print(na.omit(x), digits = 3)
+    else return(na.omit(x))
   }
     if (show.time==TRUE) {print(proc.time() - ptm)}
 }
