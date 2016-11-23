@@ -9,7 +9,8 @@ s1.rej, t1.rej, s1.acc, t1.acc, n1, s2.rej, t2.rej, n2,
 s1.rej.delta=0, t1.rej.delta=0, s1.acc.delta=0, t1.acc.delta=0,
 s2.rej.delta=0, t2.rej.delta=0, n1.delta=0, n2.delta=0,
 p0.s, p0.t, p1.s, p1.t, signif.level = 0.05, power.level = 0.85,
-show.time = TRUE, output = c("minimax","optimal","maxpower","admissible"), plot.out=FALSE)
+show.time = TRUE, output = c("minimax","optimal","maxpower","admissible", "all"),
+plot.out=FALSE)
 }
 \arguments{
 \item{method}{design methods according to number of stage and stopping rule, "s1" represents single-stage design stopping for both efficacy and futility, "s2" represents two-stage design stopping for both efficacy and futility, "s2.f" represents two-stage design stopping for futility only.}

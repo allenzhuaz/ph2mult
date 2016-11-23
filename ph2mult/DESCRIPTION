@@ -14,4 +14,3 @@ Imports:
 Suggests:
     gsDesign,
     survival
-RoxygenNote: 5.0.1
