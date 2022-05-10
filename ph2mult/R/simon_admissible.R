@@ -65,7 +65,7 @@ binom.power <- function(r1,n1,r,n,p){
 
 binom.design <- function(type = c("minimax","optimal","maxpower","admissible"), p0, p1, signif.level=0.05,power.level=0.85, nmax=100, plot.out = FALSE){
   type <- match.arg(type)
-  zz <- clinfun::ph2simon(pu=p0, pa=p1, ep1 = signif.level, ep2 = 1-power.level)[[5]]
+  zz <- clinfun::ph2simon(pu=p0, pa=p1, ep1 = signif.level, ep2 = 1-power.level, nmax = nmax)[[5]]
   r1 <- zz[,1]
   n1 <- zz[,2]
   r  <- zz[,3]
